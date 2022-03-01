@@ -2,8 +2,10 @@ package swt6.orm.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import swt6.orm.domain.Employee;
+import swt6.util.HibernateUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,22 +25,35 @@ public class EmployeeManager {
     }
   }
 
-  private static void saveEmployee(Employee employee) {
+  private static void saveEmployee1(Employee employee) {
     SessionFactory sessionFactory = new Configuration()
             .configure("hibernate.cfg.xml").buildSessionFactory();
     Session session = sessionFactory.openSession();
+    Transaction tx = session.beginTransaction();
 
     session.save(employee);
 
+    tx.commit();
     session.close();
     sessionFactory.close();
+  }
+
+  private static void saveEmployee(Employee employee) {
+    Session session = HibernateUtil.getCurrentSession();
+    Transaction tx = session.beginTransaction();
+
+    session.save(employee);
+
+    tx.commit();
   }
 
   public static void main(String[] args) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
     BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     String availCmds = "commands: quit, insert";
-    
+
+    HibernateUtil.getCurrentSession();
+
     System.out.println("Hibernate Employee Admin");
     System.out.println(availCmds);
     String userCmd = promptFor(in, "");
@@ -70,5 +85,8 @@ public class EmployeeManager {
     catch (Exception ex) {
       ex.printStackTrace();
     } // catch
+    finally {
+      HibernateUtil.closeSessionFactory();
+    }
   }
 }
