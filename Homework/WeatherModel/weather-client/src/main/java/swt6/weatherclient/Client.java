@@ -65,5 +65,8 @@ public class Client {
         catch (Exception ex) {
             logger.error(ex.getMessage());
         } // catch
+        finally {
+            station.shutdown();
+        }
     }
 }

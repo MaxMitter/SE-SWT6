@@ -48,6 +48,10 @@ public class WeatherStation {
         }
     }
 
+    public void shutdown() {
+        this.sensor.stop();
+    }
+
     public String getLatestMeasurement() {
         var measurement = measurements.get(measurements.toArray().length - 1);
         return measurement.getMeasurement() + measurement.getUnit();
