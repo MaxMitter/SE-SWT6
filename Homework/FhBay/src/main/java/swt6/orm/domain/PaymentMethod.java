@@ -8,15 +8,18 @@ import java.io.Serializable;
 @DiscriminatorColumn(name = "Type", discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("p")
 public abstract class PaymentMethod implements Serializable {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long Id;
-    private String OwnerName;
+    @ManyToOne
+    private Customer Owner;
 
-    public PaymentMethod(String ownerName) {
-        this.setOwnerName(ownerName);
+    public PaymentMethod() {
     }
 
-    public PaymentMethod() { }
+    public PaymentMethod(Customer owner) {
+        Owner = owner;
+    }
 
     public Long getId() {
         return Id;
@@ -26,11 +29,11 @@ public abstract class PaymentMethod implements Serializable {
         Id = id;
     }
 
-    public String getOwnerName() {
-        return OwnerName;
+    public Customer getOwner() {
+        return Owner;
     }
 
-    public void setOwnerName(String ownerName) {
-        OwnerName = ownerName;
+    public void setOwner(Customer owner) {
+        Owner = owner;
     }
 }

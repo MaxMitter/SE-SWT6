@@ -12,29 +12,45 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue
     private Long Id;
+    @Column(nullable = false)
     private String Name;
-    @OneToOne
+    @Column(nullable = false)
+    private String Email;
+    @OneToOne(cascade = CascadeType.ALL)
     private Address shippingAddress;
     @OneToOne(cascade = CascadeType.ALL)
     private Address billingAddress;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CUSTOMER_ID")
+    @JoinColumn(name = "OWNER_ID")
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
-    public Customer() { }
+    public Customer() {
+    }
 
-    public Customer(String name, Address shippingAddress, Address billingAddress, Set<PaymentMethod> paymentMethods) {
+    public Customer(String name, String email, Address shippingAddress, Address billingAddress) {
         Name = name;
+        this.Email = email;
         this.shippingAddress = shippingAddress;
         this.billingAddress = billingAddress;
-        this.paymentMethods = paymentMethods;
     }
 
     public void addPaymentMethod(PaymentMethod method) {
         if (method == null)
             throw new IllegalArgumentException("Payment method cannot be null");
 
+        var cust = method.getOwner();
+        if (cust != null)
+            cust.getPaymentMethods().remove(method);
         this.paymentMethods.add(method);
+        method.setOwner(this);
+    }
+
+    public boolean removePaymentMethod(PaymentMethod method) {
+        if (method == null)
+            throw new IllegalArgumentException("Payment method cannot be null");
+
+        method.setOwner(null);
+        return this.paymentMethods.remove(method);
     }
 
     public Long getId() {
@@ -51,6 +67,14 @@ public class Customer implements Serializable {
 
     public void setName(String name) {
         Name = name;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public Address getShippingAddress() {

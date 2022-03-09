@@ -12,8 +12,8 @@ public class Bankaccount extends PaymentMethod{
 
     public Bankaccount() { }
 
-    public Bankaccount(String ownerName, String iban, String bic) {
-        super(ownerName);
+    public Bankaccount(Customer owner, String iban, String bic) {
+        super(owner);
         Iban = iban;
         Bic = bic;
     }

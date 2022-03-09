@@ -13,8 +13,8 @@ public class CreditCard extends PaymentMethod {
 
     public CreditCard() { }
 
-    public CreditCard(String ownerName, String cardNumber, String expirationDate, String ccvNumber) {
-        super(ownerName);
+    public CreditCard(Customer owner, String cardNumber, String expirationDate, String ccvNumber) {
+        super(owner);
         CardNumber = cardNumber;
         ExpirationDate = expirationDate;
         CcvNumber = ccvNumber;
