@@ -18,7 +18,7 @@ public class Customer implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Address billingAddress;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "PAYMENTMETHOD_ID")
+    @JoinColumn(name = "CUSTOMER_ID")
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     public Customer() { }

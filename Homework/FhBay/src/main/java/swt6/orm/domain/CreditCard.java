@@ -7,11 +7,8 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("c")
 public class CreditCard extends PaymentMethod {
-    @Column(nullable = false)
     private String CardNumber;
-    @Column(nullable = false)
     private String ExpirationDate;
-    @Column(nullable = false)
     private String CcvNumber;
 
     public CreditCard() { }

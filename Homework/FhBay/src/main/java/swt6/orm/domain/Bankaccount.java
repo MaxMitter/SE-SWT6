@@ -7,13 +7,12 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("b")
 public class Bankaccount extends PaymentMethod{
-    @Column(nullable = false)
     private String Iban;
     private String Bic;
 
     public Bankaccount() { }
 
-    public Bankaccount(String iban, String bic, String ownerName) {
+    public Bankaccount(String ownerName, String iban, String bic) {
         super(ownerName);
         Iban = iban;
         Bic = bic;
