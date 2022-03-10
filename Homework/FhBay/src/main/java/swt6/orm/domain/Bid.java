@@ -11,10 +11,10 @@ public class Bid implements Serializable {
     private double Value;
     private LocalDateTime BiddingTime;
     @ManyToOne
-    @JoinColumn(name = "buyer_id")
+    @JoinColumn(name = "buyer_id", nullable = false)
     private Customer Buyer;
     @ManyToOne
-    @JoinColumn(name = "article_id")
+    @JoinColumn(name = "article_id", nullable = false)
     private Product Article;
 
     public Bid() { }

@@ -67,4 +67,18 @@ public class JpaUtil {
         if (emFactory != null)
             emFactory.close();
     }
+
+    public static synchronized void resetTableForTests(String tableName) {
+        var em = JpaUtil.getTransactedEntityManager();
+        var query = em.createQuery("delete from " + tableName);
+        query.executeUpdate();
+        JpaUtil.commit();
+    }
+
+    public static synchronized void resetDatabase() {
+        resetTableForTests("Bid");
+        resetTableForTests("Product");
+        resetTableForTests("Customer");
+        resetTableForTests("PaymentMethod");
+    }
 }

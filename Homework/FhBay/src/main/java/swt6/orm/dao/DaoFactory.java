@@ -1,17 +1,10 @@
 package swt6.orm.dao;
 
 public class DaoFactory {
-    private static AddressDao addressDao;
     private static BidDao bidDao;
     private static CustomerDao customerDao;
     private static PaymentMethodDao paymentMethodDao;
     private static ProductDao productDao;
-
-    public static AddressDao getAddressDao() {
-        if (addressDao == null)
-            addressDao = new swt6.orm.dao.impl.AddressDao();
-        return addressDao;
-    }
 
     public static BidDao getBidDao() {
         if (bidDao == null)
