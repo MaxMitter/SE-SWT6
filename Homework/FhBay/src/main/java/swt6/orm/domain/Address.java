@@ -1,16 +1,18 @@
 package swt6.orm.domain;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity
+//@Entity
+@Embeddable
 public class Address implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+//    @Id
+//    @GeneratedValue
+//    private Long id;
     private String zipCode;
     private String city;
     private String street;
@@ -24,13 +26,13 @@ public class Address implements Serializable {
         this.street = street;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
     public String getCity() {
         return city;

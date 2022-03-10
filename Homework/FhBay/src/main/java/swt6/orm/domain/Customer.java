@@ -12,16 +12,30 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue
     private Long Id;
+
     @Column(nullable = false)
     private String Name;
+
     @Column(nullable = false)
     private String Email;
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @Embedded
+    @AttributeOverride(name = "zipCode", column = @Column(name = "shippingAddress_zipCode"))
+    @AttributeOverride(name = "city", column = @Column(name = "shippingAddress_city"))
+    @AttributeOverride(name = "street", column = @Column(name = "shippingAddress_street"))
     private Address shippingAddress;
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @Embedded
+    @AttributeOverride(name = "zipCode", column = @Column(name = "billingAddress_zipCode"))
+    @AttributeOverride(name = "city", column = @Column(name = "billingAddress_city"))
+    @AttributeOverride(name = "street", column = @Column(name = "billingAddress_street"))
     private Address billingAddress;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "OWNER_ID")
+
+    @OneToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            mappedBy = "Owner", orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     public Customer() {

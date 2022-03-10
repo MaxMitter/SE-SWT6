@@ -1,6 +1,7 @@
 package swt6.orm.dao.impl;
 
 import swt6.orm.domain.Bid;
+import swt6.orm.domain.Product;
 import swt6.util.JpaUtil;
 
 import java.util.List;
@@ -15,5 +16,18 @@ public class BidDao extends BaseDao<Bid> implements swt6.orm.dao.BidDao {
     public List<Bid> getAll() {
         var em = JpaUtil.getTransactedEntityManager();
         return em.createQuery("select b from Bid b", getType()).getResultList();
+    }
+
+    @Override
+    public Bid getHighestBid(Product product) {
+        var em = JpaUtil.getTransactedEntityManager();
+        var query = em.createQuery("select b from Bid b where Article.Id = :productId order by Value desc", Bid.class);
+        query.setParameter("productId", product.getId());
+        var result = query.getResultList();
+
+        if (result.size() == 0)
+            return null;
+
+        return result.get(0);
     }
 }
