@@ -13,8 +13,8 @@ public class TestClient {
         JpaUtil.getEntityManagerFactory();
         try {
 //            TestCustomer();
-            TestBids();
-//            TestProducts();
+//            TestBids();
+            TestProducts();
 
             JpaUtil.commit();
         } catch (Exception ex) {
@@ -31,8 +31,8 @@ public class TestClient {
         var addr1 = new Address("4040", "Linz", "Galvanistraße 16");
         var cust1 = new Customer("Max Mustermann", "max@muster.com", addr1, addr1);
         var method = new Bankaccount(cust1, "AT47700000000000", "ATSBGRAI09");
-        var product = new Product("Siemens Lufthaken", "Very usefull", 100.0, 100.0,
-                LocalDateTime.now(), LocalDateTime.now().plusDays(1), cust1, null, ProductStatus.SAVED);
+        var product = new Product("Siemens Lufthaken", "Very useful", 100.0, 100.0,
+                LocalDateTime.now(), LocalDateTime.now().plusDays(1), cust1, cust1, ProductStatus.SAVED);
 
         System.out.println("######### add customer #########");
         customerDao.insert(cust1);
@@ -42,8 +42,23 @@ public class TestClient {
         productDao.insert(product);
         JpaUtil.commit();
 
-        System.out.println("######### print product #########");
-        productDao.getAll().forEach(customer -> System.out.println(customer));
+        System.out.println("######### find product by name #########");
+        System.out.println(productDao.getByName("siemens"));
+
+        System.out.println("######### find product by name or description #########");
+        System.out.println(productDao.getByNameOrDescription("siemens"));
+        System.out.println(productDao.getByNameOrDescription("useful"));
+
+        System.out.println("######### find product by status #########");
+        System.out.println(productDao.getByStatus(ProductStatus.SAVED));
+        System.out.println(productDao.getByStatus(ProductStatus.NOT_SELLABLE));
+
+        System.out.println("######### find product by seller #########");
+        System.out.println(productDao.getBySeller(cust1));
+
+        System.out.println("######### find product by buyer #########");
+        System.out.println(productDao.getByBuyer(cust1));
+
     }
 
     private static void TestBids() {
@@ -76,7 +91,7 @@ public class TestClient {
         bidDao.getAll().forEach(customer -> System.out.println(customer));
 
         System.out.println("######### print highest bid #########");
-        System.out.println(bidDao.getHighestBid(product));
+        System.out.println(bidDao.getHighestBid(product.getId()));
 
     }
 
@@ -111,19 +126,18 @@ public class TestClient {
         System.out.println("######### remove payment method #########");
         cust1.removePaymentMethod(method);
         cust1 = customerDao.update(cust1);
-        DaoFactory.getPaymentMethodDao().remove(method);
+        //DaoFactory.getPaymentMethodDao().remove(method);
         JpaUtil.commit();
-
-//        System.out.println("######### delete customer #########");
-//        customerDao.remove(cust1);
-//        JpaUtil.commit();
 
         System.out.println("######### print customer #########");
         customerDao.getAll().forEach(customer -> System.out.println(customer));
 
         System.out.println("######### get customer by mail #########");
         System.out.println(customerDao.getByEmail("max@muster.com"));
+        JpaUtil.commit();
 
+        System.out.println("######### delete customer #########");
+        customerDao.remove(cust1);
         JpaUtil.commit();
     }
 }

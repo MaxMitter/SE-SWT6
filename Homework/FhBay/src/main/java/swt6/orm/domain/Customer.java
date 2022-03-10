@@ -1,6 +1,8 @@
 package swt6.orm.domain;
 
 import org.hibernate.annotations.Cascade;
+import swt6.orm.dao.DaoFactory;
+import swt6.util.JpaUtil;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -64,6 +66,8 @@ public class Customer implements Serializable {
             throw new IllegalArgumentException("Payment method cannot be null");
 
         method.setOwner(null);
+        DaoFactory.getPaymentMethodDao().remove(method);
+        JpaUtil.commit();
         return this.paymentMethods.remove(method);
     }
 
