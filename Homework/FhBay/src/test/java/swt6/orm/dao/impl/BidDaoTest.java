@@ -94,7 +94,7 @@ class BidDaoTest {
         bidDao.insert(bid1);
         bidDao.insert(bid2);
 
-        var result = bidDao.getHighestBid(testProduct.getId());
+        var result = bidDao.getHighestBidByProductId(testProduct.getId());
 
         assertEquals(200.0, result.getValue());
     }

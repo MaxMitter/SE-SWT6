@@ -169,4 +169,9 @@ class ProductDaoTest {
         assertEquals(1, result.size());
         assertEquals(product2.getId(), result.get(0).getId());
     }
+
+    @Test
+    void finalizeProductTest() {
+
+    }
 }

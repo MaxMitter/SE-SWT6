@@ -1,6 +1,5 @@
 package swt6.client;
 
-import net.bytebuddy.asm.Advice;
 import swt6.orm.dao.DaoFactory;
 import swt6.orm.domain.*;
 import swt6.util.JpaUtil;
@@ -91,7 +90,7 @@ public class TestClient {
         bidDao.getAll().forEach(customer -> System.out.println(customer));
 
         System.out.println("######### print highest bid #########");
-        System.out.println(bidDao.getHighestBid(product.getId()));
+        System.out.println(bidDao.getHighestBidByProductId(product.getId()));
 
     }
 

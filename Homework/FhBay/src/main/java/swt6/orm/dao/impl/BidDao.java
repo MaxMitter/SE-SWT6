@@ -19,16 +19,17 @@ public class BidDao extends BaseDao<Bid> implements swt6.orm.dao.BidDao {
     }
 
     @Override
-    public Bid getHighestBid(Long articleId) {
+    public Bid getHighestBidByProductId(Long articleId) {
         var em = JpaUtil.getTransactedEntityManager();
         var query = em.createQuery("select b from Bid b where Article.Id = :productId order by Value desc", Bid.class);
         query.setParameter("productId", articleId);
+        query.setMaxResults(1);
         var result = query.getResultList();
 
         if (result.size() == 0)
             return null;
 
-        return result.get(0);
+        return result.stream().findFirst().get();
     }
 
     @Override

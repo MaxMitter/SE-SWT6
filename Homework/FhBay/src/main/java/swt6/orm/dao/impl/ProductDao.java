@@ -3,6 +3,7 @@ package swt6.orm.dao.impl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.internal.SessionFactoryBuilderImpl;
+import swt6.orm.domain.Bid;
 import swt6.orm.domain.Customer;
 import swt6.orm.domain.Product;
 import swt6.orm.domain.ProductStatus;
@@ -85,5 +86,37 @@ public class ProductDao extends BaseDao<Product> implements swt6.orm.dao.Product
         query.select(entry).where(cb.equal(entry.get("Buyer"), buyer.getId()));
 
         return em.createQuery(query).getResultList();
+    }
+
+    @Override
+    public Product finalizeBidProcess(Product product) {
+        var em = JpaUtil.getTransactedEntityManager();
+        var query = em.createQuery("select b from Bid b where Product = :product order by Value desc", Bid.class);
+        query.setParameter("product", product);
+        query.setMaxResults(2);
+        var result = query.getResultList();
+
+        if (result != null && result.size() >= 2) {
+            var firstBid = result.get(0);
+            var secondBid = result.get(1);
+
+            product.setFinalBid(secondBid.getValue());
+            product.setBuyer(firstBid.getBuyer());
+            product.setStatus(ProductStatus.SOLD);
+
+            product = em.merge(product);
+        } else if (result != null && result.size() == 1){
+            var firstBid = result.get(0);
+
+            product.setFinalBid(firstBid.getValue());
+            product.setBuyer(firstBid.getBuyer());
+            product.setStatus(ProductStatus.SOLD);
+
+            product = em.merge(product);
+        } else {
+            throw new RuntimeException("Not enough Bids found, product could not be sold");
+        }
+
+        return product;
     }
 }

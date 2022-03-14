@@ -12,4 +12,5 @@ public interface ProductDao extends BaseDao<Product> {
     List<Product> getByStatus(ProductStatus status);
     List<Product> getBySeller(Customer seller);
     List<Product> getByBuyer(Customer buyer);
+    Product finalizeBidProcess(Product product);
 }
