@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import swt6.orm.dao.DaoFactory;
 import swt6.orm.dao.ProductDao;
+import swt6.orm.domain.Bid;
 import swt6.orm.domain.Customer;
 import swt6.orm.domain.Product;
 import swt6.orm.domain.ProductStatus;
@@ -28,6 +29,7 @@ class ProductDaoTest {
 
     @AfterEach
     void tearDown() {
+        JpaUtil.resetTableForTests("Bid");
         JpaUtil.resetTableForTests("Product");
     }
 
@@ -169,4 +171,37 @@ class ProductDaoTest {
         assertEquals(1, result.size());
         assertEquals(product2.getId(), result.get(0).getId());
     }
+<<<<<<< HEAD:Homework/FhBay/src/src/test/java/swt6/orm/dao/impl/ProductDaoTest.java
+=======
+
+    void generateBids(Product product) {
+        var otherCustomer = new Customer("Other", "other@mail.com", null, null);
+        var bid1 = new Bid(100, LocalDateTime.now(), otherCustomer, product);
+        var bid2 = new Bid(110, LocalDateTime.now(), otherCustomer, product);
+        var bid3 = new Bid(120, LocalDateTime.now(), otherCustomer, product);
+        var bid4 = new Bid(130, LocalDateTime.now(), otherCustomer, product);
+        var bid5 = new Bid(140, LocalDateTime.now(), testCustomer, product);
+
+        DaoFactory.getCustomerDao().insert(otherCustomer);
+        DaoFactory.getBidDao().insert(bid1);
+        DaoFactory.getBidDao().insert(bid2);
+        DaoFactory.getBidDao().insert(bid3);
+        DaoFactory.getBidDao().insert(bid4);
+        DaoFactory.getBidDao().insert(bid5);
+    }
+
+    @Test
+    void finalizeProductTest() {
+        var product = new Product("Bidding Product", "this is used for testing", 100.0,
+                150.0, LocalDateTime.now(), LocalDateTime.now().plusDays(1), testCustomer, null, ProductStatus.SAVED);
+        productDao.insert(product);
+        generateBids(product);
+
+        product = productDao.finalizeBidProcess(product);
+
+        assertEquals(130, product.getFinalBid());
+        assertEquals(ProductStatus.SOLD, product.getStatus());
+        assertEquals(testCustomer, product.getBuyer());
+    }
+>>>>>>> 49e2e40... Adds test for finalizeBid but doesn't work:Homework/FhBay/src/test/java/swt6/orm/dao/impl/ProductDaoTest.java
 }
