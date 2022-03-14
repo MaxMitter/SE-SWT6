@@ -20,6 +20,9 @@ public class BidDao extends BaseDao<Bid> implements swt6.orm.dao.BidDao {
 
     @Override
     public Bid getHighestBidByProductId(Long articleId) {
+        if (articleId == null)
+            throw new IllegalArgumentException("ArticleId cannot be null");
+
         var em = JpaUtil.getTransactedEntityManager();
         var query = em.createQuery("select b from Bid b where Article.Id = :productId order by Value desc", Bid.class);
         query.setParameter("productId", articleId);
@@ -34,6 +37,9 @@ public class BidDao extends BaseDao<Bid> implements swt6.orm.dao.BidDao {
 
     @Override
     public List<Bid> getBidsByProductId(Long id) {
+        if (id == null)
+            throw new IllegalArgumentException("ID cannot be null");
+
         var em = JpaUtil.getTransactedEntityManager();
         var query = em.createQuery("select b from Bid b where Article.Id = :productId order by Value desc", Bid.class);
         query.setParameter("productId", id);
