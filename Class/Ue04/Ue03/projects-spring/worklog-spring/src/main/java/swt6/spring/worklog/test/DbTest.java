@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.context.support.AbstractApplicationContext;
@@ -13,6 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import swt6.spring.worklog.dao.EmployeeDao;
 import swt6.spring.worklog.domain.Employee;
 import swt6.util.DbScriptRunner;
+import swt6.util.JpaUtil;
 
 import static swt6.util.PrintUtil.printSeparator;
 import static swt6.util.PrintUtil.printTitle;
@@ -73,9 +75,31 @@ public class DbTest {
         try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
                 "swt6/spring/worklog/test/applicationContext-jpa1.xml")) {
 
-            //
-            // Insert your test code here
-            //
+            var fact = factory.getBean(EntityManagerFactory.class);
+            var emplDao = factory.getBean("employeeDaoJpa", EmployeeDao.class);
+            //JpaUtil.beginTransaction(fact);
+
+            printTitle("insert employee", 60, '-');
+            JpaUtil.executeInTransaction(fact, () -> {
+                Employee empl1 = new Employee("Josefine", "Feichtlbauer", LocalDate.of(1970, 10, 26));
+                emplDao.insert(empl1);
+                System.out.println("empl1 = " + (empl1 == null ? (null) : empl1.toString()));
+            });
+
+            printTitle("find employee by id", 60, '-');
+            JpaUtil.executeInTransaction(fact, () -> {
+                Optional<Employee> empl = emplDao.findById(1L);
+                System.out.println("empl=" + (empl.isPresent() ? empl.get() : "<not-found>"));
+                empl = emplDao.findById(100L);
+                System.out.println("empl=" + (empl.isPresent() ? empl.get() : "<not-found>"));
+            });
+
+            printTitle("find all employees", 60, '-');
+            JpaUtil.executeInTransaction(fact, () -> {
+                emplDao.findAll().forEach(System.out::println);
+            });
+
+            //JpaUtil.commitTransaction(fact);
         }
     }
 
@@ -92,13 +116,15 @@ public class DbTest {
 
     public static void main(String[] args) {
 
-        printSeparator(60);
-        printTitle("testJDBC", 60);
-        printSeparator(60);
-        testJdbc();
+        //printSeparator(60);
+        //printTitle("testJDBC", 60);
+        //printSeparator(60);
+        //testJdbc();
 
-//  	printSeparator(60); printTitle("testJpa", 60); printSeparator(60);
-//    testJpa();
+        printSeparator(60);
+        printTitle("testJpa", 60);
+        printSeparator(60);
+        testJpa();
 
 //  	printSeparator(60); printTitle("testSpringData", 60); printSeparator(60);
 //    testSpringData();
