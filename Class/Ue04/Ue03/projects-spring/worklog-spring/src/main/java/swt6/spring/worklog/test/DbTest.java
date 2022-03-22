@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import swt6.spring.worklog.dao.EmployeeDao;
+import swt6.spring.worklog.dao.EmployeeRepository;
 import swt6.spring.worklog.domain.Employee;
 import swt6.util.DbScriptRunner;
 import swt6.util.JpaUtil;
@@ -108,9 +109,37 @@ public class DbTest {
         try (AbstractApplicationContext factory = new ClassPathXmlApplicationContext(
                 "swt6/spring/worklog/test/applicationContext-jpa1.xml")) {
 
-            //
-            // Insert your test code here
-            //
+            var emFactory = factory.getBean(EntityManagerFactory.class);
+
+            printTitle("insert employees", 60, '-');
+            JpaUtil.executeInTransaction(emFactory, () -> {
+                EmployeeRepository employeeRepo = JpaUtil.getJpaRepository(emFactory, EmployeeRepository.class);
+                Employee empl1 = new Employee("Josefine", "Feichtlbauer", LocalDate.of(1970, 10, 26));
+                Employee empl2 = new Employee("Franz", "Oberbauer", LocalDate.of(2000, 10, 26));
+                empl1 = employeeRepo.save(empl1);
+                empl2 = employeeRepo.save(empl2);
+            });
+
+            printTitle("test queries", 60, '-');
+            JpaUtil.executeInTransaction(emFactory, () -> {
+                EmployeeRepository employeeRepo = JpaUtil.getJpaRepository(emFactory, EmployeeRepository.class);
+                var empl = employeeRepo.findByLastName("Oberbauer");
+                System.out.println("empl=" + (empl.isPresent() ? empl.get() : "<not-found>"));
+
+                printSeparator(60);
+
+                var empl2 = employeeRepo.findByLastNameContaining("bauer");
+                for (var employee : empl2) {
+                    System.out.println(employee);
+                }
+
+                printSeparator(60);
+
+                var empls = employeeRepo.findOlderThan(LocalDate.of(2000, 1, 1));
+                for (var employee : empls) {
+                    System.out.println(employee);
+                }
+            });
         }
     }
 
@@ -121,12 +150,14 @@ public class DbTest {
         //printSeparator(60);
         //testJdbc();
 
-        printSeparator(60);
-        printTitle("testJpa", 60);
-        printSeparator(60);
-        testJpa();
+        //printSeparator(60);
+        //printTitle("testJpa", 60);
+        //printSeparator(60);
+        //testJpa();
 
-//  	printSeparator(60); printTitle("testSpringData", 60); printSeparator(60);
-//    testSpringData();
+        printSeparator(60);
+        printTitle("testSpringData", 60);
+        printSeparator(60);
+        testSpringData();
     }
 }
