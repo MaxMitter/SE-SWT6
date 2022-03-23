@@ -1,5 +1,7 @@
 package swt6.mitter.fhbay.domain;
 
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -33,6 +35,7 @@ public class Customer implements Serializable {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             mappedBy = "Owner", orphanRemoval = true,
             fetch = FetchType.LAZY)
+    @Lazy
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     public Customer() {

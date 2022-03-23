@@ -4,6 +4,7 @@
 
     <!-- logger name="org.springframework" level="DEBUG" /-->
     <logger name="swt6.mitter.fhbay.config" level="TRACE" />
+    <logger name="swt6.mitter.fhbay.util" level="TRACE" />
 
     <!--<logger name="org.hibernate.internal.SessionImpl" level="TRACE" />-->
     <!--<logger name="logger.org.hibernate.engine.transaction" level="TRACE" />-->

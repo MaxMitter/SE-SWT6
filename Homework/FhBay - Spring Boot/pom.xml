@@ -103,7 +103,7 @@
                 <configuration>
                     <derbyHome>${project.basedir}/data</derbyHome>
                     <port>1527</port>
-                    <database>WorklogDb</database>
+                    <database>FhBay</database>
                 </configuration>
             </plugin>
         </plugins>
