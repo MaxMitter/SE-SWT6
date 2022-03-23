@@ -2,6 +2,7 @@ package swt6.mitter.fhbay.logic.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import swt6.mitter.fhbay.domain.Customer;
 import swt6.mitter.fhbay.domain.Product;
@@ -11,7 +12,7 @@ import swt6.mitter.fhbay.repository.ProductRepository;
 import java.util.List;
 
 @Service("productService")
-@Transactional
+@Transactional(propagation = Propagation.NESTED)
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
