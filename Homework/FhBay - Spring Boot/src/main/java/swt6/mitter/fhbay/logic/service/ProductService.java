@@ -11,4 +11,8 @@ public interface ProductService {
     Product addBuyerToProduct(Product product, Customer buyer);
 
     List<Product> findAll();
+
+    List<Product> findByName(String pattern);
+    List<Product> findByDescription(String pattern);
+    List<Product> findByNameOrDescription(String pattern);
 }

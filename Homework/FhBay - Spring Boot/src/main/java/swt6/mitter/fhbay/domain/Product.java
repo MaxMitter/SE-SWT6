@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 public class Product implements Serializable {
     @Id @GeneratedValue
     private Long Id;
-    private String Name;
-    private String Description;
+    private String name;
+    private String description;
     private double StartingBid;
     private double FinalBid;
     private LocalDateTime AuctionStart;
@@ -26,8 +26,8 @@ public class Product implements Serializable {
     public Product() { }
 
     public Product(String name, String description, double startingBid, double finalBid, LocalDateTime auctionStart, LocalDateTime auctionEnd, Customer seller, Customer buyer, ProductStatus status) {
-        Name = name;
-        Description = description;
+        this.name = name;
+        this.description = description;
         StartingBid = startingBid;
         FinalBid = finalBid;
         AuctionStart = auctionStart;
@@ -46,19 +46,19 @@ public class Product implements Serializable {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public double getStartingBid() {
@@ -121,8 +121,8 @@ public class Product implements Serializable {
     public String toString() {
         return "Product{" +
                 "Id=" + Id +
-                ", Name='" + Name + '\'' +
-                ", Description='" + Description + '\'' +
+                ", Name='" + name + '\'' +
+                ", Description='" + description + '\'' +
                 ", StartingBid=" + StartingBid +
                 ", FinalBid=" + FinalBid +
                 ", AuctionStart=" + AuctionStart +

@@ -23,12 +23,9 @@ public class TransactionAdvice {
     protected Logger logger = LoggerFactory.getLogger(TransactionAdvice.class);
 
     @Autowired
-    EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
-    @Around("execution(public * swt6.mitter.fhbay.logic..*find*(..))")
+    @Around(value = "execution(public * swt6.mitter.fhbay.shell.*.*(..))")
     public Object transactionAround(ProceedingJoinPoint pjp) throws Throwable {
         if (entityManagerFactory == null)
             throw new IllegalArgumentException("Property 'entityManagerFactory' is required");
@@ -36,24 +33,17 @@ public class TransactionAdvice {
         boolean participate = false;
         if (TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
             participate = true;
-            logger.trace("found open entity manager");
         } else {
-            logger.trace("Opening EntityManager");
             JpaUtil.openEntityManager(entityManagerFactory);
         }
 
         Object ret = null;
 
         try {
-            logger.trace("trying to proceed with function");
             ret = pjp.proceed(); // delegates to method of target class.
         } finally {
-            if (!participate) {
+            if (!participate)
                 JpaUtil.closeEntityManager(entityManagerFactory);
-                logger.trace("Closed EntityManager");
-            } else {
-                logger.trace("no EntityManager opened, proceeding");
-            }
         }
         return ret;
     }

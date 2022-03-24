@@ -27,7 +27,7 @@ public class DbInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        logger.trace("Hello from CMD Runner");
+
         Customer testCustomer = new Customer("Test", "test@mail.com", null, null);
         Product testProduct = new Product("Testproduct", "this is used for testing", 100.0,
                 150.0, LocalDateTime.now(), LocalDateTime.now().plusDays(1), testCustomer, null, ProductStatus.SAVED);
