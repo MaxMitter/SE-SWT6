@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import swt6.mitter.fhbay.domain.Customer;
 import swt6.mitter.fhbay.domain.Product;
 import swt6.mitter.fhbay.logic.service.ProductService;
+import swt6.mitter.fhbay.repository.CustomerRepository;
 import swt6.mitter.fhbay.repository.ProductRepository;
 
 import java.util.List;
@@ -17,19 +18,28 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @Override
     public Product createProduct(Product product) {
         return productRepository.saveAndFlush(product);
     }
 
     @Override
-    public Product addSellerToProduct(Product product, Customer seller) {
+    public Product addSellerToProduct(long productId, long sellerId) {
+        var product = productRepository.getById(productId);
+        var seller = customerRepository.getById(sellerId);
+
         product.setSeller(seller);
         return productRepository.saveAndFlush(product);
     }
 
     @Override
-    public Product addBuyerToProduct(Product product, Customer buyer) {
+    public Product addBuyerToProduct(long productId, long buyerId) {
+        var product = productRepository.getById(productId);
+        var buyer = customerRepository.getById(buyerId);
+
         product.setBuyer(buyer);
         return productRepository.saveAndFlush(product);
     }

@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ProductService {
     Product createProduct(Product product);
-    Product addSellerToProduct(Product product, Customer seller);
-    Product addBuyerToProduct(Product product, Customer buyer);
+    Product addSellerToProduct(long productId, long sellerId);
+    Product addBuyerToProduct(long productId, long buyerId);
 
     List<Product> findAll();
 

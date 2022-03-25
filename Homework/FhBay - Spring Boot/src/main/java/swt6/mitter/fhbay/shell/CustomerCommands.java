@@ -17,13 +17,7 @@ public class CustomerCommands {
     }
 
     @ShellMethod("Gets Customer by Id")
-    public String get(String customerId) {
-        long l = 0L;
-        try {
-            l = Long.parseLong(customerId);
-        } catch (NumberFormatException ex) {
-            return "Please provide a valid Number";
-        }
-        return customerService.getCustomerById(l).toString();
+    public String get(long customerId) {
+        return customerService.getCustomerById(customerId).toString();
     }
 }

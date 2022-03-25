@@ -47,4 +47,16 @@ public class ProductCommands {
     public String findProducts(String searchValue) {
             return productService.findByNameOrDescription(searchValue).toString();
     }
+
+    @ShellMethod("Adds a given Buyer to a given Product")
+    public String addBuyer(long productId, long userId) {
+        productService.addBuyerToProduct(productId, userId);
+        return "Buyer successfully added";
+    }
+
+    @ShellMethod("Adds a given Seller to a given Product")
+    public String addSeller(long productId, long userId) {
+        productService.addSellerToProduct(productId, userId);
+        return "Seller successfully added";
+    }
 }
