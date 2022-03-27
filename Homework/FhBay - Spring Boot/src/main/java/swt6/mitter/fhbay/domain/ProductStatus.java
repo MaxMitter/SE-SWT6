@@ -4,6 +4,6 @@ public enum ProductStatus {
     SAVED,
     OPEN_FOR_BIDS,
     SOLD,
-    NOT_SELLABLE,
+    CLOSED_NO_BIDS,
     CANCELED
 }
