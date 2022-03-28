@@ -1,18 +1,27 @@
 package swt6.mitter.fhbay.shell;
 
+import org.jline.reader.LineReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import swt6.mitter.fhbay.domain.Customer;
 import swt6.mitter.fhbay.domain.Product;
 import swt6.mitter.fhbay.domain.ProductStatus;
 import swt6.mitter.fhbay.logic.service.BidService;
+import swt6.mitter.fhbay.logic.service.CustomerService;
 import swt6.mitter.fhbay.logic.service.ProductService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 @ShellComponent
 public class ProductCommands {
+
+    @Autowired
+    @Lazy
+    private LineReader reader;
 
     @Autowired
     private ProductService productService;
@@ -20,12 +29,15 @@ public class ProductCommands {
     @Autowired
     private BidService bidService;
 
+    @Autowired
+    private CustomerService customerService;
+
     @ShellMethod("Creates a random Product for testing")
     public String createRandomProduct() {
         Product testProduct = new Product("Testproduct", "this is used for testing", 100.0,
                 150.0, LocalDateTime.now(), LocalDateTime.now().plusDays(1), null, null, ProductStatus.OPEN_FOR_BIDS);
 
-        testProduct = productService.createProduct(testProduct);
+        testProduct = productService.save(testProduct);
         return testProduct.toString();
     }
 
@@ -75,5 +87,47 @@ public class ProductCommands {
             return "Finalzising failed";
         }
         return "Product sale finalized.";
+    }
+
+    @ShellMethod("Creates a new Product")
+    public String newProduct() {
+        var name = reader.readLine("Product Name > ");
+        var description  = reader.readLine("Products Description > ");
+        double startingBid;
+        try {
+            startingBid = Double.parseDouble(reader.readLine("Starting Bid > "));
+        } catch (NumberFormatException ex) {
+            return "Please provide a valid number";
+        }
+
+        LocalDateTime startDate;
+        try {
+            startDate = LocalDateTime.parse(reader.readLine("Start Date and Time (YYYY-MM-DDThh:mm > "));
+        } catch (DateTimeParseException ex) {
+            return "Please provide a valid Date";
+        }
+
+        int duration;
+        try {
+            duration = Integer.parseInt(reader.readLine("How long should the auction run? (in days) > "));
+        } catch (NumberFormatException ex) {
+            return "Please provide a valid number";
+        }
+
+        Customer seller;
+        try {
+            var sellerId = Long.parseLong(reader.readLine("Seller ID > "));
+            seller = customerService.findById(sellerId);
+            if (seller == null) {
+                return "No Customer with this ID found";
+            }
+        } catch (NumberFormatException ex) {
+            return "Please provide a valid ID";
+        }
+
+        var product = new Product(name, description, startingBid, 0, startDate, startDate.plusDays(duration),
+                seller, null, ProductStatus.OPEN_FOR_BIDS);
+
+        return productService.save(product).toString();
     }
 }

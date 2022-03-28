@@ -17,7 +17,13 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public Customer getCustomerById(Long id) {
+    @Transactional(readOnly = false)
+    public Customer save(Customer customer) {
+        return customerRepository.saveAndFlush(customer);
+    }
+
+    @Override
+    public Customer findById(Long id) {
         return customerRepository.getById(id);
     }
 

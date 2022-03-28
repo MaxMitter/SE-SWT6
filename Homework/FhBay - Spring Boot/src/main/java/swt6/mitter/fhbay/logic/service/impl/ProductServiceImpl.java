@@ -12,7 +12,7 @@ import swt6.mitter.fhbay.repository.ProductRepository;
 import java.util.List;
 
 @Service("productService")
-@Transactional
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -22,13 +22,14 @@ public class ProductServiceImpl implements ProductService {
     private CustomerRepository customerRepository;
 
     @Override
-    public Product findById(long productId) {
-        return productRepository.findById(productId).orElse(null);
+    @Transactional(readOnly = false)
+    public Product save(Product product) {
+        return productRepository.saveAndFlush(product);
     }
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.saveAndFlush(product);
+    public Product findById(long productId) {
+        return productRepository.findById(productId).orElse(null);
     }
 
     @Override
@@ -50,7 +51,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Product> findAll() {
         return productRepository.findAll();
     }

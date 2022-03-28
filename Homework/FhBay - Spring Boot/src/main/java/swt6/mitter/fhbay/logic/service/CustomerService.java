@@ -5,7 +5,8 @@ import swt6.mitter.fhbay.domain.Customer;
 import java.util.List;
 
 public interface CustomerService {
-    Customer getCustomerById(Long id);
+    Customer save(Customer customer);
+    Customer findById(Long id);
     List<Customer> getAllCustomers();
     Customer searchCustomerByName(String substring);
 }
