@@ -17,6 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.Status = 2")
     List<Product> findByBiddingClosed();
 
-    @Query("select p from Product p where p.Status = 1 and p.AuctionEnd < current_time")
+    @Query("select p from Product p where p.Status = 1 and p.AuctionEnd < current_timestamp")
     List<Product> findAuctionsStatusOpenButExpired();
 }

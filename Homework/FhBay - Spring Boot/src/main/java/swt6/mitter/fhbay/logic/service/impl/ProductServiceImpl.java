@@ -22,6 +22,11 @@ public class ProductServiceImpl implements ProductService {
     private CustomerRepository customerRepository;
 
     @Override
+    public Product findById(long productId) {
+        return productRepository.findById(productId).orElse(null);
+    }
+
+    @Override
     public Product createProduct(Product product) {
         return productRepository.saveAndFlush(product);
     }

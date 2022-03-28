@@ -6,6 +6,7 @@ import swt6.mitter.fhbay.domain.Product;
 import java.util.List;
 
 public interface ProductService {
+    Product findById(long productId);
     Product createProduct(Product product);
     Product addSellerToProduct(long productId, long sellerId);
     Product addBuyerToProduct(long productId, long buyerId);

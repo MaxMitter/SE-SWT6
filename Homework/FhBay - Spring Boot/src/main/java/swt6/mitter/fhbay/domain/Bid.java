@@ -7,73 +7,73 @@ import java.time.LocalDateTime;
 @Entity
 public class Bid implements Serializable {
     @Id @GeneratedValue
-    private Long Id;
-    private double Value;
-    private LocalDateTime BiddingTime;
+    private Long id;
+    private double value;
+    private LocalDateTime biddingTime;
     @ManyToOne
     @JoinColumn(name = "buyer_id", nullable = false)
-    private Customer Buyer;
+    private Customer buyer;
     @ManyToOne
     @JoinColumn(name = "article_id", nullable = false)
-    private Product Article;
+    private Product article;
 
     public Bid() { }
 
     public Bid(double value, LocalDateTime biddingTime, Customer buyer, Product article) {
-        Value = value;
-        BiddingTime = biddingTime;
-        Buyer = buyer;
-        Article = article;
+        this.value = value;
+        this.biddingTime = biddingTime;
+        this.buyer = buyer;
+        this.article = article;
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public double getValue() {
-        return Value;
+        return value;
     }
 
     public void setValue(double value) {
-        Value = value;
+        this.value = value;
     }
 
     public LocalDateTime getBiddingTime() {
-        return BiddingTime;
+        return biddingTime;
     }
 
     public void setBiddingTime(LocalDateTime biddingTime) {
-        BiddingTime = biddingTime;
+        this.biddingTime = biddingTime;
     }
 
     public Customer getBuyer() {
-        return Buyer;
+        return buyer;
     }
 
     public void setBuyer(Customer buyer) {
-        Buyer = buyer;
+        this.buyer = buyer;
     }
 
     public Product getArticle() {
-        return Article;
+        return article;
     }
 
     public void setArticle(Product article) {
-        Article = article;
+        this.article = article;
     }
 
     @Override
     public String toString() {
         return "Bid{" +
-                "Id=" + Id +
-                ", Value=" + Value +
-                ", BiddingTime=" + BiddingTime +
-                ", Buyer=" + Buyer +
-                ", Article=" + Article +
+                "Id=" + id +
+                ", Value=" + value +
+                ", BiddingTime=" + biddingTime +
+                ", Buyer=" + buyer +
+                ", Article=" + article +
                 '}';
     }
 }

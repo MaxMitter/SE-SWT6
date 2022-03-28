@@ -6,6 +6,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import swt6.mitter.fhbay.domain.Product;
 import swt6.mitter.fhbay.domain.ProductStatus;
+import swt6.mitter.fhbay.logic.service.BidService;
 import swt6.mitter.fhbay.logic.service.ProductService;
 
 import java.time.LocalDateTime;
@@ -16,10 +17,13 @@ public class ProductCommands {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private BidService bidService;
+
     @ShellMethod("Creates a random Product for testing")
     public String createRandomProduct() {
         Product testProduct = new Product("Testproduct", "this is used for testing", 100.0,
-                150.0, LocalDateTime.now(), LocalDateTime.now().plusDays(1), null, null, ProductStatus.SAVED);
+                150.0, LocalDateTime.now(), LocalDateTime.now().plusDays(1), null, null, ProductStatus.OPEN_FOR_BIDS);
 
         testProduct = productService.createProduct(testProduct);
         return testProduct.toString();
@@ -58,5 +62,18 @@ public class ProductCommands {
     public String addSeller(long productId, long userId) {
         productService.addSellerToProduct(productId, userId);
         return "Seller successfully added";
+    }
+
+    @ShellMethod("Manually finalized the Sale of a product")
+    public String finalizeSale(long productId, boolean force) {
+        var product = productService.findById(productId);
+        if (product == null) return "Product with ID " + productId + "could not be found.";
+
+        try {
+            bidService.finalizeBidding(product);
+        } catch (Exception ex) {
+            return "Finalzising failed";
+        }
+        return "Product sale finalized.";
     }
 }

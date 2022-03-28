@@ -1,7 +1,11 @@
 package swt6.mitter.fhbay.logic.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import swt6.mitter.fhbay.domain.Bid;
 import swt6.mitter.fhbay.domain.Product;
 import swt6.mitter.fhbay.domain.ProductStatus;
@@ -14,7 +18,11 @@ import swt6.mitter.fhbay.repository.ProductRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Service("BidService")
+@Transactional
 public class BidServiceImpl implements BidService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ProductRepository productRepository;
@@ -66,6 +74,7 @@ public class BidServiceImpl implements BidService {
 
     @Scheduled(fixedDelay = 5000L)
     public void checkAuctionStatus() {
+        logger.trace("Checking recently expired Bids");
         for (var product : productRepository.findAuctionsStatusOpenButExpired()) {
             finalizeBidding(product);
         }
