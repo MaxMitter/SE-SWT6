@@ -32,3 +32,6 @@ derby.log
 
 *target/
 *.idea/
+*.vs/
+*bin/
+*obj/
